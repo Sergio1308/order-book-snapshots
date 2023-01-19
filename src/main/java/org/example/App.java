@@ -20,16 +20,12 @@ public class App {
 
     public static void run(String path) {
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
-        JsonParser parser = new JsonParser();
         OrderBookManagerService bookManagerService = new OrderBookManagerService();
         URL url;
         try {
             url = new URL(path);
-            URL finalUrl = url;
             final Runnable runnable = () -> {
-                String jsonObj = parser.getJsonStringResponse(finalUrl);
-                OrderBook orderBook = parser.parseJson(jsonObj);
-                bookManagerService.processOrderBook(orderBook);
+                bookManagerService.processOrderBook(url);
             };
             executorService.scheduleAtFixedRate(runnable, 0, Config.EXECUTION_PERIOD, TimeUnit.SECONDS);
         } catch (MalformedURLException e ) {
