@@ -1,8 +1,6 @@
 package org.example;
 
 import org.example.config.Config;
-import org.example.models.OrderBook;
-import org.example.services.JsonParser;
 import org.example.services.OrderBookManagerService;
 
 import java.net.MalformedURLException;
