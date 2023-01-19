@@ -28,9 +28,8 @@ public abstract class AbstractBook {
      * @return result string
      */
     public String comparePriceBetweenBooks(AbstractBook previousBook) {
-        // TODO
         if (price != previousBook.getPrice()) {
-            return String.format(Locale.US,"delete[%s] (%f, %f)\tnew[%s] (%f, %f)",
+            return String.format(Locale.US,"delete[%s] (%f, %f)\t->\tnew[%s] (%f, %f)",
                     previousBook.getSide(),
                     previousBook.getPrice(),
                     previousBook.getQty(),
@@ -43,7 +42,6 @@ public abstract class AbstractBook {
                     getPrice(),
                     getQty());
         }
-        // TODO
         return "";
     }
 
