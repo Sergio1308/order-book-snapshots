@@ -67,7 +67,7 @@ public class JsonParser {
         JsonNode asksNode = rootNode.path("asks");
         Iterator<JsonNode> bidsIterator = bidsNode.elements();
         Iterator<JsonNode> asksIterator = asksNode.elements();
-        // bids and asks have a different number of array-elements, so we check hasNext in bids OR asks
+        // Bids and asks have a different number of array-elements, so we check hasNext in bids OR asks
         while (bidsIterator.hasNext() || asksIterator.hasNext()) {
             if (bidsIterator.hasNext()) {
                 JsonNode currentBid = bidsIterator.next();
