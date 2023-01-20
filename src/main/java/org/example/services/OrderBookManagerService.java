@@ -31,18 +31,25 @@ public class OrderBookManagerService {
         Iterator<Ask> asksListIterator = orderBook.getAsksList().iterator();
         Iterator<Ask> previousAsksListIterator = previousOrderBook.getAsksList().iterator();
 
-        while (bidsListIterator.hasNext() && asksListIterator.hasNext()) {
-            Bid currentBid = bidsListIterator.next();
+        // Checking hasNext only with asks because they have the largest (limit=asks.size) and...
+        // ...unchanging length of array-elements compared to the previous request
+        while (asksListIterator.hasNext()) {
+            if (bidsListIterator.hasNext() && previousBidsListIterator.hasNext()) {
+                Bid currentBid = bidsListIterator.next();
+                Bid previousBid = previousBidsListIterator.next();
+                String bidString = currentBid.comparePriceBetweenBooks(previousBid);
+                if (bidString.isEmpty()) {
+                    continue;
+                }
+                builder.append(bidString).append("\n");
+            }
             Ask currentAsk = asksListIterator.next();
-            Bid previousBid = previousBidsListIterator.next();
             Ask previousAsk = previousAsksListIterator.next();
-
-            String bidString = currentBid.comparePriceBetweenBooks(previousBid);
             String askString = currentAsk.comparePriceBetweenBooks(previousAsk);
-            if (bidString.isEmpty() || askString.isEmpty()) {
+            if (askString.isEmpty()) {
                 continue;
             }
-            builder.append(bidString).append("\n").append(askString).append("\n");
+            builder.append(askString).append("\n");
         }
         return builder.toString();
     }
