@@ -23428,4 +23428,3 @@ delete[Asks] (29.760000, 69.180000)	->	new[Asks] (29.737000, 8.120000)
 
 янв. 20, 2023 3:20:51 AM org.example.services.LoggerService writeLogToFile
 INFO: CUMULATIVE SIZE CHANGE: [bids] (1044.250000), [asks] (-1343.980000)
-
