@@ -1,5 +1,5 @@
 # Order-book-snapshots
-Order book app for receiving Snapshots order book order by LINKUSDT via REST API every 10 seconds and 
+Order book app for receiving Snapshots order book order by LINKUSDT via REST API every 10 seconds 
 ## Project Structure
 * package src/main/java/org/example contains:
   * config package:
@@ -10,7 +10,7 @@ Order book app for receiving Snapshots order book order by LINKUSDT via REST API
     * Bid.java, bids model representation (extends AbstractBook)
     * OrderBook.java, order book model representation, contains bidsList & asksList, implements methods for operations on lists
   * services package:
-    * JsonParser.java, makes a request to get JSON response
+    * JsonParser.java, makes a request to get JSON response and parse it
     * LoggerService.java, implements application logging
     * OrderBookManagerService.java, implements interaction and calculation logic for models
   * App.java, starts the app
