@@ -67,11 +67,15 @@ public class JsonParser {
         JsonNode asksNode = rootNode.path("asks");
         Iterator<JsonNode> bidsIterator = bidsNode.elements();
         Iterator<JsonNode> asksIterator = asksNode.elements();
-        while (bidsIterator.hasNext() && asksIterator.hasNext()) {
-            JsonNode currentBid = bidsIterator.next();
-            JsonNode currentAsk = asksIterator.next();
-            bidsList.add(new Bid(currentBid.get(0).asDouble(), currentBid.get(1).asDouble()));
-            asksList.add(new Ask(currentAsk.get(0).asDouble(), currentAsk.get(1).asDouble()));
+        // bids and asks have a different number of array-elements, so we check hasNext in bids OR asks
+        while (bidsIterator.hasNext() || asksIterator.hasNext()) {
+            if (bidsIterator.hasNext()) {
+                JsonNode currentBid = bidsIterator.next();
+                bidsList.add(new Bid(currentBid.get(0).asDouble(), currentBid.get(1).asDouble()));
+            } else {
+                JsonNode currentAsk = asksIterator.next();
+                asksList.add(new Ask(currentAsk.get(0).asDouble(), currentAsk.get(1).asDouble()));
+            }
         }
         return new OrderBook(bidsList, asksList);
     }

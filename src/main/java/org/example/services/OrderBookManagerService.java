@@ -25,24 +25,36 @@ public class OrderBookManagerService {
     }
 
     private String compareTwoBooks(OrderBook orderBook) {
+        System.out.println("comparing books...");
         StringBuilder builder = new StringBuilder();
         Iterator<Bid> bidsListIterator = orderBook.getBidsList().iterator();
         Iterator<Bid> previousBidsListIterator = previousOrderBook.getBidsList().iterator();
         Iterator<Ask> asksListIterator = orderBook.getAsksList().iterator();
         Iterator<Ask> previousAsksListIterator = previousOrderBook.getAsksList().iterator();
+        System.out.println(orderBook.getBidsList().size());
+        System.out.println(previousOrderBook.getBidsList().size());
+        System.out.println(orderBook.getAsksList().size());
+        System.out.println(previousOrderBook.getAsksList().size());
 
-        while (bidsListIterator.hasNext() && asksListIterator.hasNext()) {
-            Bid currentBid = bidsListIterator.next();
+        // Checking hasNext only with asks because they have the largest (limit=asks.size) and...
+        // ...unchanging length of array-elements compared to the previous request
+        while (asksListIterator.hasNext()) {
+            if (bidsListIterator.hasNext() && previousBidsListIterator.hasNext()) {
+                Bid currentBid = bidsListIterator.next();
+                Bid previousBid = previousBidsListIterator.next();
+                String bidString = currentBid.comparePriceBetweenBooks(previousBid);
+                if (bidString.isEmpty()) {
+                    continue;
+                }
+                builder.append(bidString).append("\n");
+            }
             Ask currentAsk = asksListIterator.next();
-            Bid previousBid = previousBidsListIterator.next();
             Ask previousAsk = previousAsksListIterator.next();
-
-            String bidString = currentBid.comparePriceBetweenBooks(previousBid);
             String askString = currentAsk.comparePriceBetweenBooks(previousAsk);
-            if (bidString.isEmpty() || askString.isEmpty()) {
+            if (askString.isEmpty()) {
                 continue;
             }
-            builder.append(bidString).append("\n").append(askString).append("\n");
+            builder.append(askString).append("\n");
         }
         return builder.toString();
     }
