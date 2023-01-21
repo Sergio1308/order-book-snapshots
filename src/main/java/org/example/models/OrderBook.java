@@ -1,15 +1,15 @@
 package org.example.models;
 
-import java.util.List;
+import java.util.Map;
 
 public class OrderBook {
 
-    private final List<Bid> bidsList;
-    private final List<Ask> asksList;
+    private final Map<Double, Bid> bidsMap;
+    private final Map<Double, Ask> asksMap;
 
-    public OrderBook(List<Bid> bidsList, List<Ask> asksList) {
-        this.bidsList = bidsList;
-        this.asksList = asksList;
+    public OrderBook(Map<Double, Bid> bidsMap, Map<Double, Ask> asksMap) {
+        this.bidsMap = bidsMap;
+        this.asksMap = asksMap;
     }
 
     /**
@@ -18,40 +18,35 @@ public class OrderBook {
      * @return array of double, where index 0 - bids difference, index 1 - asks difference.
      */
     public double[] calculateQtyDifferenceBetweenOrders(OrderBook previousOrderBook) {
-        double currentBidsSum = sumOfListQty(bidsList);
-        double currentAsksSum = sumOfListQty(asksList);
-        double previousBidsSum = sumOfListQty(previousOrderBook.bidsList);
-        double previousAsksSum = sumOfListQty(previousOrderBook.asksList);
+        double currentBidsSum = sumOfMapQty(bidsMap);
+        double currentAsksSum = sumOfMapQty(asksMap);
+        double previousBidsSum = sumOfMapQty(previousOrderBook.bidsMap);
+        double previousAsksSum = sumOfMapQty(previousOrderBook.asksMap);
         return new double[] {(previousBidsSum - currentBidsSum), (previousAsksSum - currentAsksSum)};
     }
 
     /**
-     * Count a sum of qty (size) for all elements in List.
-     * @param booksList list of bids or asks.
+     * Count a sum of qty (size) for all values in Map.
+     * @param bookMap map of bids or asks.
      * @return sum of qty in double.
      */
-    public double sumOfListQty(List<? extends AbstractBook> booksList) {
-        int size = booksList.size();
-        if (size == 0) {
-            return 0;
-        } else {
-            return booksList.get(0).getQty() + sumOfListQty(booksList.subList(1, size));
-        }
+    public double sumOfMapQty(Map<Double, ? extends AbstractBook> bookMap) {
+        return bookMap.values().stream().mapToDouble(AbstractBook::getQty).sum();
     }
 
-    public List<Ask> getAsksList() {
-        return asksList;
+    public Map<Double, Bid> getBidsMap() {
+        return bidsMap;
     }
 
-    public List<Bid> getBidsList() {
-        return bidsList;
+    public Map<Double, Ask> getAsksMap() {
+        return asksMap;
     }
 
     @Override
     public String toString() {
         return "OrderBook{" +
-                "asksList=" + asksList +
-                ", bidsList=" + bidsList +
+                "bidsMap=" + bidsMap +
+                ", asksMap=" + asksMap +
                 '}';
     }
 }
