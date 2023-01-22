@@ -12,9 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class JsonParser {
 
@@ -52,7 +50,7 @@ public class JsonParser {
      * @param jsonData JSON String.
      * @return OrderBook object filled with data.
      */
-    public OrderBook parseJson(String jsonData) {
+    public OrderBook parseJsonToObject(String jsonData) {
         final ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode;
         try {
@@ -60,8 +58,8 @@ public class JsonParser {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        List<Bid> bidsList = new ArrayList<>();
-        List<Ask> asksList = new ArrayList<>();
+        Map<Double, Bid> bidsMap = new HashMap<>();
+        Map<Double, Ask> asksMap = new HashMap<>();
 
         JsonNode bidsNode = rootNode.path("bids");
         JsonNode asksNode = rootNode.path("asks");
@@ -71,12 +69,12 @@ public class JsonParser {
         while (bidsIterator.hasNext() || asksIterator.hasNext()) {
             if (bidsIterator.hasNext()) {
                 JsonNode currentBid = bidsIterator.next();
-                bidsList.add(new Bid(currentBid.get(0).asDouble(), currentBid.get(1).asDouble()));
+                bidsMap.put(currentBid.get(0).asDouble(), new Bid(currentBid.get(0).asDouble(), currentBid.get(1).asDouble()));
             } else {
                 JsonNode currentAsk = asksIterator.next();
-                asksList.add(new Ask(currentAsk.get(0).asDouble(), currentAsk.get(1).asDouble()));
+                asksMap.put(currentAsk.get(0).asDouble(), new Ask(currentAsk.get(0).asDouble(), currentAsk.get(1).asDouble()));
             }
         }
-        return new OrderBook(bidsList, asksList);
+        return new OrderBook(bidsMap, asksMap);
     }
 }
