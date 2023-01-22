@@ -1,6 +1,6 @@
 package org.example.models;
 
-import java.util.Locale;
+import java.util.Objects;
 
 public abstract class AbstractBook {
 
@@ -22,27 +22,17 @@ public abstract class AbstractBook {
         return qty;
     }
 
-    /**
-     * Difference in price between the previous and current book.
-     * @param previousBook Bid or Ask object.
-     * @return result string
-     */
-    public String comparePriceBetweenBooks(AbstractBook previousBook) {
-        if (price != previousBook.getPrice()) {
-            return String.format(Locale.US,"delete[%s] (%f, %f)\t->\tnew[%s] (%f, %f)",
-                    previousBook.getSide(),
-                    previousBook.getPrice(),
-                    previousBook.getQty(),
-                    getSide(),
-                    getPrice(),
-                    getQty());
-        } else if (price == previousBook.getPrice() && qty != previousBook.getQty()) {
-            return String.format(Locale.US,"update[%s] (%f, %f)",
-                    getSide(),
-                    getPrice(),
-                    getQty());
-        }
-        return "";
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractBook book = (AbstractBook) o;
+        return Double.compare(book.price, price) == 0 && Double.compare(book.qty, qty) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(price, qty);
     }
 
     @Override
