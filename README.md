@@ -1,5 +1,5 @@
 # Order-book-snapshots
-Order book app for receiving Snapshots order book order by LINKUSDT via REST API every 10 seconds 
+App for receiving Order Book Snapshots by LINKUSDT via REST API every 10 seconds. The result is written to the log, which is located in the root directory.
 ## Project Structure
 * package src/main/java/org/example contains:
   * config package:
@@ -8,9 +8,10 @@ Order book app for receiving Snapshots order book order by LINKUSDT via REST API
     * AbstractBook.java, abstract book(asks/bids) model representation
     * Ask.java, asks model representation (extends AbstractBook)
     * Bid.java, bids model representation (extends AbstractBook)
-    * OrderBook.java, order book model representation, contains bidsList & asksList, implements methods for operations on lists
+    * OrderBook.java, order book model representation, contains bidsMap & asksMap, implements methods to work with them
   * services package:
     * JsonParser.java, makes a request to get JSON response and parse it
+    * InvalidUrlException.java and JsonParsingException.java, own exceptions
     * LoggerService.java, implements application logging
     * OrderBookManagerService.java, implements interaction and calculation logic for models
   * App.java, starts the app
@@ -28,12 +29,16 @@ Order book app for receiving Snapshots order book order by LINKUSDT via REST API
 │   │   │   ├───Bid.java
 │   │   │   └───OrderBook.java
 │   │   ├───services
+│   │   │   ├───InvalidUrlException.java
 │   │   │   ├───JsonParser.java
+│   │   │   ├───JsonParsingException.java
 │   │   │   ├───LoggerService.java
 │   │   │   └───OrderBookManagerService.java
 │   │   └───App.java
 │   └───test/java/org/example
-│       └───AppTest.java
+│       ├───JsonParserTest.java
+│       ├───OrderBookManagerServiceTest.java
+│       └───OrderBookTest.java
 ├───.gitignore
 ├───LICENSE
 ├───README.md
