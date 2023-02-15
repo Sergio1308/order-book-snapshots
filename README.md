@@ -37,7 +37,6 @@ App for receiving Order Book Snapshots by LINKUSDT via REST API every 10 seconds
 │   │   └───App.java
 │   └───test/java/org/example
 │       ├───JsonParserTest.java
-│       ├───OrderBookManagerServiceTest.java
 │       └───OrderBookTest.java
 ├───.gitignore
 ├───LICENSE
