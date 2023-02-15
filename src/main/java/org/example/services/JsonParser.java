@@ -21,28 +21,28 @@ public class JsonParser {
      * @param url URL.
      * @return JSON as a String.
      */
-    public String getJsonStringResponse(URL url) {
+    public String getJsonStringResponse(URL url) throws InvalidUrlException {
         String readLine;
         HttpURLConnection connection;
         int responseCode;
+        StringBuilder response = new StringBuilder();
         try {
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder response = new StringBuilder();
                 while ((readLine = bufferedReader.readLine()) != null) {
                     response.append(readLine);
                 }
                 bufferedReader.close();
-                return response.toString();
             } else {
-                return "Received an invalid response code " + responseCode;
+                throw new InvalidUrlException("Received an invalid response code " + responseCode);
             }
         } catch (IOException e) {
-            throw new RuntimeException();
+            throw new InvalidUrlException("Invalid URL -> " + url);
         }
+        return response.toString();
     }
 
     /**
@@ -50,13 +50,13 @@ public class JsonParser {
      * @param jsonData JSON String.
      * @return OrderBook object filled with data.
      */
-    public OrderBook parseJsonToObject(String jsonData) {
+    public OrderBook parseJsonToObject(String jsonData) throws JsonParsingException {
         final ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode;
         try {
             rootNode = objectMapper.readTree(jsonData);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new JsonParsingException("Cannot parse JSON -> " + jsonData);
         }
         Map<Double, Bid> bidsMap = new HashMap<>();
         Map<Double, Ask> asksMap = new HashMap<>();
@@ -69,10 +69,12 @@ public class JsonParser {
         while (bidsIterator.hasNext() || asksIterator.hasNext()) {
             if (bidsIterator.hasNext()) {
                 JsonNode currentBid = bidsIterator.next();
-                bidsMap.put(currentBid.get(0).asDouble(), new Bid(currentBid.get(0).asDouble(), currentBid.get(1).asDouble()));
+                bidsMap.put(currentBid.get(0).asDouble(),
+                        new Bid(currentBid.get(0).asDouble(), currentBid.get(1).asDouble()));
             } else {
                 JsonNode currentAsk = asksIterator.next();
-                asksMap.put(currentAsk.get(0).asDouble(), new Ask(currentAsk.get(0).asDouble(), currentAsk.get(1).asDouble()));
+                asksMap.put(currentAsk.get(0).asDouble(),
+                        new Ask(currentAsk.get(0).asDouble(), currentAsk.get(1).asDouble()));
             }
         }
         return new OrderBook(bidsMap, asksMap);
