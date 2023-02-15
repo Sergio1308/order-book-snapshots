@@ -22,22 +22,15 @@ public class OrderBook {
      */
     public String checkIfPriceLevelUpdatedOrAdded(Map<Double, ? extends AbstractBook> previousBookMap,
                                                   AbstractBook currentBook) {
+        String result = "";
         if (!previousBookMap.containsKey(currentBook.getPrice())) {
-            return String.format(
-                    Locale.US, "new [%s] (%.3f, %.3f)",
-                    currentBook.getSide(),
-                    currentBook.getPrice(),
-                    currentBook.getQty());
+            result = getSideOutput("new", currentBook);
         } else {
             if (previousBookMap.get(currentBook.getPrice()).getQty() != currentBook.getQty()) {
-                return String.format(
-                        Locale.US,"update [%s] (%.3f, %.3f)",
-                        currentBook.getSide(),
-                        currentBook.getPrice(),
-                        currentBook.getQty());
+                result = getSideOutput("update", currentBook);
             }
         }
-        return "";
+        return result;
     }
 
     /**
@@ -49,14 +42,20 @@ public class OrderBook {
      */
     public String checkIfPriceLevelDeleted(Map<Double, ? extends AbstractBook> currentBookMap,
                                            AbstractBook previousBook) {
+        String result = "";
         if (!currentBookMap.containsKey(previousBook.getPrice())) {
-            return String.format(
-                    Locale.US,"delete [%s] (%.3f, %.3f)",
-                    previousBook.getSide(),
-                    previousBook.getPrice(),
-                    previousBook.getQty());
+            result = getSideOutput("delete", previousBook);
         }
-        return "";
+        return result;
+    }
+
+    private String getSideOutput(String action, AbstractBook book) {
+        return String.format(
+                Locale.US,"%s [%s] (%.3f, %.3f)",
+                action,
+                book.getSide(),
+                book.getPrice(),
+                book.getQty());
     }
 
     /**
@@ -77,7 +76,7 @@ public class OrderBook {
      * @param bookMap map of bids or asks.
      * @return sum of qty in double.
      */
-    public double sumOfMapQty(Map<Double, ? extends AbstractBook> bookMap) {
+    private double sumOfMapQty(Map<Double, ? extends AbstractBook> bookMap) {
         return bookMap.values().stream().mapToDouble(AbstractBook::getQty).sum();
     }
 

@@ -17,8 +17,16 @@ public class OrderBookManagerService {
 
     public void processOrderBook(URL finalUrl) {
         JsonParser parser = new JsonParser();
-        String jsonObj = parser.getJsonStringResponse(finalUrl);
-        OrderBook orderBook = parser.parseJsonToObject(jsonObj);
+        String jsonObj;
+        OrderBook orderBook;
+        try {
+            jsonObj = parser.getJsonStringResponse(finalUrl);
+            orderBook = parser.parseJsonToObject(jsonObj);
+        } catch (InvalidUrlException | JsonParsingException e) {
+            e.printStackTrace();
+            LoggerService.writeLogToFile(e.toString());
+            return;
+        }
         if (previousOrderBook != null) {
             writeComparisonOfBooksLog(orderBook);
             writeQtyDifferenceBetweenOrdersLog(orderBook);
