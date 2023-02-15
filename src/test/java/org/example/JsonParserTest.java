@@ -1,6 +1,5 @@
 package org.example;
 
-import org.example.config.Config;
 import org.example.models.OrderBook;
 import org.example.services.InvalidUrlException;
 import org.example.services.JsonParser;

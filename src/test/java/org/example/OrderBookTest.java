@@ -3,7 +3,6 @@ package org.example;
 import org.example.models.Ask;
 import org.example.models.Bid;
 import org.example.models.OrderBook;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
